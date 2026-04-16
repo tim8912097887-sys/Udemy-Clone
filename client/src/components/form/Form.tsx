@@ -1,10 +1,14 @@
 type Props = {
   children: React.ReactNode;
+  onSubmit?: (e: React.SubmitEvent<HTMLFormElement>) => void;
 };
 
-const Form = ({ children }: Props) => {
+const Form = ({ children, onSubmit }: Props) => {
   return (
-    <form className="w-70 md:w-100 px-8 py-16 rounded space-y-10 shadow-2xl bg-amber-50">
+    <form
+      className="w-70 md:w-100 px-8 py-16 rounded space-y-10 shadow-2xl bg-amber-50"
+      onSubmit={onSubmit}
+    >
       {children}
     </form>
   );
