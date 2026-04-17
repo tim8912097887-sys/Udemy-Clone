@@ -1,4 +1,3 @@
-import { formatValidatedError } from '#utils/errorFormat.js';
 import z from 'zod';
 
 const EnvSchema = z.object({
@@ -27,7 +26,9 @@ const EnvSchema = z.object({
 const result = EnvSchema.safeParse(process.env);
 // Stop the application by throw error
 if (!result.success) {
-    const errorMessage = formatValidatedError(result.error);
+    const errorMessage = result.error.issues
+        .map((issue) => issue.message)
+        .join(', ');
     console.error(`Environment variables Error: ${errorMessage}`);
     // Should exit when env not available
     process.exit(1);
