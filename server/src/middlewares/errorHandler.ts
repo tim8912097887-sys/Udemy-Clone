@@ -1,8 +1,8 @@
 import { ErrorRequestHandler } from 'express';
 import { responseEnvelope } from '#utils/responseEnvelope.js';
 import { logger } from '#configs/logger.js';
-import { BadRequestError } from '#src/errors/bad-request.js';
-import { ApiError } from '#src/errors/api.js';
+import { BadRequestError } from '#errors/bad-request.js';
+import { ApiError } from '#errors/api.js';
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
     // Variables for data envelope

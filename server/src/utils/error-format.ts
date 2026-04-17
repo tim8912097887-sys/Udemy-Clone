@@ -1,4 +1,4 @@
-import { ValidationError } from '#src/types/index.js';
+import { ValidationError } from '#types/index.js';
 import { ZodError } from 'zod';
 
 export const formatValidatedError = (error: ZodError) => {
