@@ -5,7 +5,7 @@ import { logger } from '#configs/logger.js';
 
 export const notFoundHandler: RequestHandler = (req, res) => {
     logger.warn(
-        `NotFoundHandler: Ip ${req.ip} enter not found route ${req.url}`,
+        `NotFoundHandler: Ip ${req.ip} enter not found route ${req.method} ${req.url}`,
     );
 
     res.status(ERROR_CODE.NOT_FOUND).json(

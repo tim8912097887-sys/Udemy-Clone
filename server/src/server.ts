@@ -3,6 +3,7 @@ import { initializeApp } from './app.js';
 import { env } from '#configs/env.js';
 import { logger } from '#configs/logger.js';
 import { shutdown, subscribeShutdown } from '#utils/shutdown.js';
+import { dbConnection } from './db/index.js';
 
 class AppServer {
     private static instance: AppServer;
@@ -24,6 +25,7 @@ class AppServer {
 
     public async start(): Promise<void> {
         try {
+            await dbConnection();
             const app = initializeApp();
             this.server = app.listen(env.PORT, () => {
                 logger.info(
