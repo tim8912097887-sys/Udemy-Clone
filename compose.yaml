@@ -1,0 +1,38 @@
+services:
+  mongo_server:
+    image: mongo:latest
+    container_name: mongo_server_container
+    ports:
+      - 27017:27017
+    networks:
+      - udemy_clone_net
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+  udemy_clone_server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: udemy_clone_server_container
+    ports:
+      - 3000:3000
+    env_file:
+      - ./server/.env
+    networks:
+      - udemy_clone_net
+    depends_on:
+      mongo_server:
+        condition: service_healthy
+    restart: always
+networks:
+  udemy_clone_net:
+    driver: bridge
+volumes:
+  mongo_data:

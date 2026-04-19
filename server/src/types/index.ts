@@ -1,3 +1,6 @@
+import { Response } from 'express';
+import mongoose from 'mongoose';
+
 export enum ERROR_CODE {
     BAD_REQUEST = 400,
     NOT_FOUND = 404,
@@ -9,10 +12,10 @@ export enum ERROR_CODE {
     SERVER_UNAVAILABLE = 503,
 }
 
-export interface ValidationError {
+export type ValidationError = {
     field: string;
     value: string;
-}
+};
 
 export type State = 'success' | 'error' | 'redirect';
 
@@ -23,7 +26,7 @@ export type ErrorObject = {
     errors?: ValidationError[];
 };
 
-export type Data = null | object;
+export type Data = null | any;
 
 export type Params = {
     state: State;
@@ -37,4 +40,43 @@ export type ResponseStructure = {
     meta: {
         timestamp: string;
     };
+};
+
+type UserRole = 'user' | 'admin';
+
+export interface IUser extends mongoose.Document {
+    name: string;
+    email: string;
+    password: string;
+    role: UserRole;
+}
+
+export type UserModelType = mongoose.Model<IUser, object, object>;
+
+export type Payload = {
+    sub: string;
+};
+
+export type AuthPayload = {
+    sub: string;
+    iat: number;
+    exp: number;
+};
+
+export type UserData = {
+    _id: mongoose.Types.ObjectId;
+    name: string;
+    email: string;
+    role: UserRole;
+};
+
+export type LoginData = {
+    message: string;
+    user: UserData;
+};
+
+export type SuccessResponse<T> = {
+    res: Response;
+    data: T;
+    statusCode?: number;
 };
