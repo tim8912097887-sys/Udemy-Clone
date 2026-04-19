@@ -23,7 +23,7 @@ export const createToken = async (
 export const verifyToken = async (
     token: string,
     secret: string,
-): Promise<AuthPayload | undefined> => {
+): Promise<AuthPayload> => {
     const key = new TextEncoder().encode(secret);
     try {
         const { payload } = await jwtDecrypt(token, key, {
