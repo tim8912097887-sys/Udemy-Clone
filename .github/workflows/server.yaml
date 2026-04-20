@@ -1,0 +1,108 @@
+name: Server - Build and Lint and Test
+on:
+  pull_request:
+    branches:
+      - main
+      - development
+      - server
+    paths:
+      - "server/**"
+      - ".github/workflows/server.yaml"
+  push:
+    branches:
+      - server
+    paths:
+      - "server/**"
+      - ".github/workflows/server.yaml"
+env:
+  NODE_ENV: ${{ vars.NODE_ENV }}
+  CENTRAL_LOG_TOKEN: ${{ secrets.CENTRAL_LOG_TOKEN }}
+  PORT: ${{ vars.PORT }}
+  MONGO_URI: ${{ secrets.MONGO_URI }}
+  LOG_LEVEL: ${{ vars.LOG_LEVEL }}
+  SALT_ROUNDS: ${{ vars.SALT_ROUNDS }}
+  REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+  ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+  REFRESH_TOKEN_EXPIRES_IN: ${{ vars.REFRESH_TOKEN_EXPIRES_IN }}
+  ACCESS_TOKEN_EXPIRES_IN: ${{ vars.ACCESS_TOKEN_EXPIRES_IN }}
+  JWT_ISSUER: ${{ vars.JWT_ISSUER }}
+  JWT_AUDIENCE: ${{ vars.JWT_AUDIENCE }}
+jobs:
+  build-server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.26.1
+          standalone: true
+      - name: Set up Node.js with version ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+          cache-dependency-path: "./server/pnpm-lock.yaml"
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Run Build
+        run: pnpm run build
+  lint-server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.26.1
+          standalone: true
+      - name: Set up Node.js with version ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+          cache-dependency-path: "./server/pnpm-lock.yaml"
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Run Lint
+        run: pnpm run lint
+  test-server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.26.1
+          standalone: true
+      - name: Set up Node.js with version ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+          cache-dependency-path: "./server/pnpm-lock.yaml"
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Run Test
+        run: pnpm run test
