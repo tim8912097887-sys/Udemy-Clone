@@ -1,0 +1,45 @@
+name: Client - Build and Lint
+on:
+  pull_request:
+    branches:
+      - main
+      - development
+      - client
+    paths:
+      - "client/**"
+      - ".github/workflows/client.yaml"
+  push:
+    branches:
+      - client
+    paths:
+      - "client/**"
+      - ".github/workflows/client.yaml"
+jobs:
+  build-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.26.1
+          standalone: true
+      - name: Set up Node.js with version ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+          cache-dependency-path: "./client/pnpm-lock.yaml"
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Run Lint
+        run: pnpm run lint
+      - name: Run Build
+        run: pnpm run build
