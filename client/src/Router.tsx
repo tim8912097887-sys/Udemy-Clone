@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router";
 import App from "./App";
 import AuthPage from "./pages/auth";
+import RouteGuard from "./components/route-guards/RouteGuard";
+import InstructorDashboard from "./pages/instructor";
 
 export const router = createBrowserRouter([
   {
@@ -9,7 +11,15 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "auth",
-        element: <AuthPage />,
+        element: (
+          <RouteGuard>
+            <AuthPage />
+          </RouteGuard>
+        ),
+      },
+      {
+        path: "instructor",
+        element: <InstructorDashboard />,
       },
     ],
   },
