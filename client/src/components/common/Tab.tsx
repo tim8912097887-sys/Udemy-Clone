@@ -9,9 +9,11 @@ type TabProps = {
   setActiveTab: (tab: string) => void;
 };
 
-type DivProps = React.HTMLAttributes<HTMLDivElement> & {
+type ContentProps = React.HTMLAttributes<HTMLDivElement> & {
   value: string;
 };
+
+type ListProps = React.HTMLAttributes<HTMLDivElement>;
 
 type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
   value: string;
@@ -30,7 +32,7 @@ const Tab = ({
   );
 };
 
-const List = ({ children, className = "", ...props }: DivProps) => {
+const List = ({ children, className = "", ...props }: ListProps) => {
   return (
     <div
       className={`inline-flex h-10 items-center justify-center rounded-md bg-gray-100 text-gray-500 ${className}`}
@@ -65,7 +67,12 @@ const Trigger = ({
   );
 };
 
-const Content = ({ children, value, className = "", ...props }: DivProps) => {
+const Content = ({
+  children,
+  value,
+  className = "",
+  ...props
+}: ContentProps) => {
   const { activeTab } = useTab();
 
   if (activeTab !== value) return null;
