@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import type { ZodObject } from "zod";
-import type { SuccessResponse } from "../types";
 
 type FormStatus = {
   isSubmitting: boolean;
@@ -9,7 +8,7 @@ type FormStatus = {
 };
 
 type Props<T extends Record<string, unknown>> = {
-  submitFunction: (data: T) => Promise<SuccessResponse>;
+  submitFunction: (data: T) => Promise<void>;
   validateSchema?: ZodObject<any>;
 };
 

@@ -1,11 +1,9 @@
-type ButtonProps = {
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: React.ReactNode;
   customClassName?: string;
-  type: "button" | "submit" | "reset";
-  props?: React.ButtonHTMLAttributes<HTMLButtonElement>;
 };
 
-const Button = ({ children, customClassName, type, props }: ButtonProps) => {
+const Button = ({ children, customClassName, type, ...props }: ButtonProps) => {
   return (
     <button
       className={`font-bold rounded transition-colors duration-300 cursor-pointer ${customClassName || ""}`}
