@@ -20,3 +20,21 @@ export interface SuccessResponse extends ResponseStructure {
   data: any;
   error: null;
 }
+
+export type AuthenticatedUser = {
+  id: string;
+  name: string;
+  role: "user" | "admin" | "instructor";
+};
+
+export type AuthProviderValue = {
+  user: null | AuthenticatedUser;
+  isAuthenticated: boolean;
+  handleLoginState: (user: AuthenticatedUser) => void;
+  handleLogoutState: () => void;
+};
+
+export type TabProviderValue = {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+};
