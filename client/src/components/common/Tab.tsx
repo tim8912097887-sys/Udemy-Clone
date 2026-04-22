@@ -1,44 +1,87 @@
-type TabListProps = {
-  children: React.ReactNode;
-};
+import useTab from "../../hooks/useTab";
+import TabProvider from "../../providers/TabProvider";
+import Button from "./Button";
 
 type TabProps = {
-  name: string;
-  currentActive: string;
-  onClick: (tabName: string) => void;
+  children: React.ReactNode;
+  className?: string;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 };
 
-const TabList = ({ children }: TabListProps) => {
+type DivProps = React.HTMLAttributes<HTMLDivElement> & {
+  value: string;
+};
+
+type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
+  value: string;
+};
+
+const Tab = ({
+  children,
+  className = "",
+  activeTab,
+  setActiveTab,
+}: TabProps) => {
   return (
-    /* The Container: Gray background, rounded, centered items */
-    <div className="inline-flex h-9 items-center justify-center rounded-lg bg-gray-100 p-1 text-gray-500">
+    <TabProvider activeTab={activeTab} setActiveTab={setActiveTab}>
+      <div className={className}>{children}</div>
+    </TabProvider>
+  );
+};
+
+const List = ({ children, className = "", ...props }: DivProps) => {
+  return (
+    <div
+      className={`inline-flex h-10 items-center justify-center rounded-md bg-gray-100 text-gray-500 ${className}`}
+      {...props}
+    >
       {children}
     </div>
   );
 };
 
-const Tab = ({ name, currentActive, onClick }: TabProps) => {
-  const isActive = currentActive === name;
-
+const Trigger = ({
+  children,
+  value,
+  className = "",
+  ...props
+}: ButtonProps) => {
+  const { activeTab, setActiveTab } = useTab();
+  const isActive = activeTab === value;
+  const customClassName = `inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 disabled:pointer-events-none disabled:opacity-50 
+        ${isActive ? "bg-white text-slate-950 shadow-sm" : "hover:text-slate-700"} 
+        ${className}`;
   return (
-    <button
-      onClick={() => onClick(name)}
-      className={`
-        inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium transition-all
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2
-        disabled:pointer-events-none disabled:opacity-50
-        ${
-          isActive
-            ? "bg-white text-gray-950 shadow-sm" // The "Active" pill look
-            : "hover:text-gray-700" // The "Inactive" hover look
-        }
-      `}
+    <Button
+      value={value}
+      type="button"
+      customClassName={customClassName}
+      onClick={() => setActiveTab(value)}
+      {...props}
     >
-      {name}
-    </button>
+      {children}
+    </Button>
   );
 };
 
-TabList.Tab = Tab;
+const Content = ({ children, value, className = "", ...props }: DivProps) => {
+  const { activeTab } = useTab();
 
-export default TabList;
+  if (activeTab !== value) return null;
+
+  return (
+    <div
+      className={`mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
+Tab.List = List;
+Tab.Trigger = Trigger;
+Tab.Content = Content;
+
+export default Tab;
