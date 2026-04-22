@@ -16,7 +16,7 @@ export const signUp = async (data: SignupFormData) => {
             user: {
               id: "123",
               name: data.name,
-              email: data.email,
+              role: "user",
             },
           },
           error: null,
@@ -62,6 +62,7 @@ export const signIn = async (data: SigninFormData) => {
             user: {
               id: "123",
               email: data.email,
+              role: "user",
             },
           },
           error: null,
